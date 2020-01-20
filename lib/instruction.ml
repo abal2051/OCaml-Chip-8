@@ -29,3 +29,17 @@ let decode = function
   | 0x1, k_high, k_mid, k_low -> JP (merge_bits3 k_high k_mid k_low)
   | _ -> failwith "Unknown opcode encountered"
 ;;
+
+let to_string = 
+  function
+  | CLS             -> "CLS" (* 00 E0  *)
+  | RND    (r,  x)  -> Printf.sprintf "RND%2x,%3x" (reg_index r) x (* Cx kk  *)
+  | LD_I   (_,  x)  -> Printf.sprintf "LD%3s,%3x" "I" x(* an nn  *)
+  | LD_B   (_, r)   -> Printf.sprintf "LD%3s,%3x" "B" (reg_index r)(* Fx 33  *)
+  | LD_R_I (r, _)   -> Printf.sprintf "LD%3x,%3s" (reg_index r) "I" (* Fx 65  *)
+  | LD_I_R (_, r)   -> Printf.sprintf "LD%3s,%3x" "I" (reg_index r)(* Fx 55  *)
+  | LD_F   (_, r)   -> Printf.sprintf "LD%3s,%3x" "F" (reg_index r)(* Fx 29  *)
+  | LD_R_B (r, k)   -> Printf.sprintf "LD%3x,%3x"(reg_index r) k (* 6x kk  *)
+  | LD_K   r        -> Printf.sprintf "LD%3x,%3s" (reg_index r) "K" (* Fx 0a *)
+  | DRW   (x, y, n) -> Printf.sprintf "DRW%2x,%3x%3x" (reg_index x) (reg_index y) n (* Dx yn *)
+  | JP     n        -> Printf.sprintf "JP%3x" n(* 1n nn *)
