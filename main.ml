@@ -1,9 +1,13 @@
 open Base
 open Stdio
-open Chip8 
+open Chip8
 
 let binary = ref ""
+let screen_width = ref 600
+let screen_height = ref 600
 let set_binary s = binary := s
+let set_width w = screen_width := w  
+let set_height h = screen_height := h  
 
 let read_binary (filename : string ref) =
   let ch = In_channel.create !filename in
@@ -28,8 +32,8 @@ let format_binary bytes =
   ^ "\n"
 ;;
 
-let main =
-  let arg_list = [ "-f", Caml.Arg.String set_binary, "Provide a Chip-8 ROM to run" ] in
+(* let () =
+  let arg_list = [ "-f", Caml.Arg.String set_binary, "Provide a Chip-8 ROM to run";] in
   let usage_msg = "Chip-8 Emulator" in
   Caml.Arg.parse arg_list print_endline usage_msg;
   read_binary binary
@@ -38,7 +42,15 @@ let main =
   |> List.map ~f:Instruction.decode
   |> List.map ~f:Instruction.to_string
   |> List.iter ~f:(fun str -> Stdio.printf "%s\n" str)
-;;
+;; *)
+
+let x = 
+  let open Components.Framebuffer in 
+  Stdio.printf "drawing..\n";
+  init ();
+  set 50 30 true;
+  draw ();
+  Graphics.wait_next_event [Graphics.Button_down];
 
 (* List.iter (fun byte -> printf "%x
 " byte) bytes; *)
