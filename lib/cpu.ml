@@ -1,8 +1,0 @@
-
-
-(* 
-BOOT PROCESS
-
-
-
-*)

@@ -1,6 +1,6 @@
 open Base
 open Stdio
-open Chip8
+open Chip8.Components
 
 let binary = ref ""
 let screen_width = ref 600
@@ -20,37 +20,35 @@ let read_binary (filename : string ref) =
   res
 ;;
 
-let format_binary bytes =
-  List.foldi
-    ~f:(fun i str byte ->
-      let byte = Char.to_int byte in
-      if i % 8 = 0
-      then Printf.sprintf "%s\n%02x" str byte
-      else Printf.sprintf "%s %02x" str byte)
-    ~init:""
-    bytes
-  ^ "\n"
+
+let () =
+  (* let arg_list = [ "-f", Caml.Arg.String set_binary, "Provide a Chip-8 ROM to run";] in
+  let usage_msg = "Chip-8 Emulator" in
+  Caml.Arg.parse arg_list print_endline usage_msg; *)
+  let temp = ref "random.ch8" in 
+  read_binary temp
+  |> List.map ~f:Char.to_int
+  |> Memory.load_ROM;
+  CPU.init ();
+  CPU.cycle ();
+  (*
+  List.map ~f:CPU.decode [ (0xA0, 00); (0x60, 0x10) ;(0xD0, 0x05) ]
+  |> List.iter ~f:CPU.execute;
+  let _ = Graphics.wait_next_event [Graphics.Button_down] in () *)
+  (* CPU.cycle (); *)
+  (* |> Utils.process_bytes *)
+  (* |> List.map ~f:Instruction.decode *)
+  (* |> List.map ~f:Instruction.to_string
+  |> List.iter ~f:(fun str -> Stdio.printf "%s\n" str) *)
 ;;
 
-(* let () =
-  let arg_list = [ "-f", Caml.Arg.String set_binary, "Provide a Chip-8 ROM to run";] in
-  let usage_msg = "Chip-8 Emulator" in
-  Caml.Arg.parse arg_list print_endline usage_msg;
-  read_binary binary
-  |> List.map ~f:Char.to_int
-  |> Utils.process_bytes
-  |> List.map ~f:Instruction.decode
-  |> List.map ~f:Instruction.to_string
-  |> List.iter ~f:(fun str -> Stdio.printf "%s\n" str)
-;; *)
-
-let x = 
+(* let x = 
   let open Components.Framebuffer in 
   Stdio.printf "drawing..\n";
   init ();
   set 50 30 true;
   draw ();
-  Graphics.wait_next_event [Graphics.Button_down];
+  Graphics.wait_next_event [Graphics.Button_down]; *)
 
 (* List.iter (fun byte -> printf "%x
 " byte) bytes; *)

@@ -1,3 +1,5 @@
 (executable
  (name main)
- (libraries unix stdio base chip8))
+ (libraries unix stdio base chip8)
+ (flags (-g))
+ (modes byte))
